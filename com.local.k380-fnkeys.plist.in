@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.local.k380-fnkeys</string>
+
+	<!-- @LISTENER@ is replaced with this checkout's absolute path by `make install`. -->
+	<key>ProgramArguments</key>
+	<array>
+		<string>@LISTENER@</string>
+	</array>
+
+	<!-- Launch-on-demand when the K380 (VID 1133 / PID 45890) keyboard collection
+	     appears in the IORegistry. The listener consumes these events via
+	     xpc_set_event_stream_handler(), so launchd does not relaunch it in a loop. -->
+	<key>LaunchEvents</key>
+	<dict>
+		<key>com.apple.iokit.matching</key>
+		<dict>
+			<key>k380-connect</key>
+			<dict>
+				<key>IOProviderClass</key>
+				<string>IOHIDDevice</string>
+				<key>IOMatchLaunchStream</key>
+				<true/>
+				<key>VendorID</key>
+				<integer>1133</integer>
+				<key>ProductID</key>
+				<integer>45890</integer>
+				<key>PrimaryUsagePage</key>
+				<integer>1</integer>
+				<key>PrimaryUsage</key>
+				<integer>6</integer>
+			</dict>
+		</dict>
+	</dict>
+
+	<!-- No RunAtLoad/KeepAlive: launchd starts the listener on demand when the
+	     matching device appears, and it exits once the connect event burst has
+	     settled. On install/login, bootstrap replays the already-connected K380
+	     as an event, so the mode is applied then too. -->
+</dict>
+</plist>
