@@ -1,0 +1,2 @@
+# Intermediate build products (the binaries below are committed for convenience)
+*.o
